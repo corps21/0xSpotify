@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.19;
 
-contract ListDB {
+contract Data {
 
     //User Section
 
@@ -106,7 +106,7 @@ contract ListDB {
             artistInfoLogs[_artist].name = _name;
         }
 
-        else if(codeToSong !== bytes32(0)){
+        else if(codeToSong != bytes32(0)){
             artistInfoLogs[_artist].songCreated.push(codeToSong);
         }
     }

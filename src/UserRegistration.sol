@@ -2,14 +2,14 @@
 
 pragma solidity 0.8.19;
 
-import {ListDB} from "./Data.sol";
+import {Data} from "./Data.sol";
 
 contract UserRegistration {
 
-    ListDB listDb;
+    Data data;
 
     constructor(address _addOfList) {
-        listDb = ListDB(_addOfList);
+        data = Data(_addOfList);
     }
 
     error alreadyRegistered();
@@ -17,11 +17,11 @@ contract UserRegistration {
     event userRegistered(address indexed _user, uint256 _whenjoined);
 
     function register(string calldata _name) external {
-        if(listDb.getIsArtist[msg.sender] !== false) {
+        if(data.getIsUser(msg.sender) == true) {
             revert alreadyRegistered();
         }
-        listDb.setIsArtist(msg.sender,false);
-        listDb.setArtistList(msg.sender);
+        data.setArtistList(msg.sender);
+        data.setArtistInfoLogs(msg.sender, _name, bytes32(0), true);
         emit userRegistered(msg.sender, block.timestamp);
     }
 }
