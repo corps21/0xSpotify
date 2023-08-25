@@ -20,8 +20,8 @@ contract UserRegistration {
         if(data.getIsUser(msg.sender) == true) {
             revert alreadyRegistered();
         }
-        data.setArtistList(msg.sender);
-        data.setArtistInfoLogs(msg.sender, _name, bytes32(0), true);
+        data.setUserList(msg.sender);
+        data.setUserInfo(_name, address(0), bytes32(0), true, msg.sender, false);
         emit userRegistered(msg.sender, block.timestamp);
     }
 }
