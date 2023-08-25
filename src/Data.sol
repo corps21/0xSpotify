@@ -3,6 +3,9 @@
 pragma solidity 0.8.19;
 
 contract ListDB {
+
+    //User Section
+
     address[] userList;
 
     function getUserList() external view returns (address[] memory) {
@@ -49,6 +52,8 @@ contract ListDB {
         }
     }
 
+    //Song Section
+
     struct Song {
         string name;
         Genre genreOfSong;
@@ -66,6 +71,8 @@ contract ListDB {
         INDIE,
         POP
     }
+
+    //Artist Section 
 
     address[] artistList;
 
@@ -99,7 +106,7 @@ contract ListDB {
             artistInfoLogs[_artist].name = _name;
         }
 
-        else {
+        else if(codeToSong !== bytes32(0)){
             artistInfoLogs[_artist].songCreated.push(codeToSong);
         }
     }
