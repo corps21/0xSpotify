@@ -3,17 +3,36 @@
 pragma solidity 0.8.19;
 
 import {ListDB} from "./Data.sol";
+contract ArtistRegistration {
 
-contract ArtistRegistration is ListDB {
+    ListDB listDb;
+
+    uint256 constant REGISTRATION_FEE = 1 * 1e18;
+
+    error alreadyRegistered();
+    error sendExactFee();
+
+    constructor(address _addofList) {
+        listDb = ListDB(_addofList);
+    }
+
     event artistRegistrated(address indexed _artist, uint256 _whenjoined);
 
-    function register(string memory _name) external {
-        isUser[msg.sender] = true;
-        artistList.push(msg.sender);
-       
-        emit artistRegistrated(msg.sender, block.timestamp);
+    function register(string calldata _name) external {
+        if(listDb.getIsArtist[msg.sender] !== false) {
+            revert alreadyRegistered();
+        }
 
-        artistInfo[msg.sender].name = _name;
+        else if(msg.value !== REGISTRATION_FEE) {
+            revert sendExactFee();
+        } 
+
+        listDb.setIsArtist(msg.sender,false);
+        listDb.setArtistList(msg.sender);
+        listDb.setArtistInfoLogs(msg.sender,_name,bytes32(0),true);
+        emit artistRegistrated(_msg.sender,block.timestamp);
     }
+
+
 }
 
