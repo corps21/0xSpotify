@@ -2,10 +2,10 @@
 
 pragma solidity 0.8.19;
 
-import {ListDB} from "./Data.sol";
+import {Data} from "./Data.sol";
 contract ArtistRegistration {
 
-    ListDB listDb;
+    Data data;
 
     uint256 constant REGISTRATION_FEE = 1 * 1e18;
 
@@ -13,24 +13,24 @@ contract ArtistRegistration {
     error sendExactFee();
 
     constructor(address _addofList) {
-        listDb = ListDB(_addofList);
+        data = Data(_addofList);
     }
 
     event artistRegistrated(address indexed _artist, uint256 _whenjoined);
 
-    function register(string calldata _name) external {
-        if(listDb.getIsArtist[msg.sender] !== false) {
+    function register(string calldata _name) external payable {
+        if(data.getIsArtist(msg.sender) != false) {
             revert alreadyRegistered();
         }
 
-        else if(msg.value !== REGISTRATION_FEE) {
+        else if(msg.value != REGISTRATION_FEE) {
             revert sendExactFee();
         } 
 
-        listDb.setIsArtist(msg.sender,false);
-        listDb.setArtistList(msg.sender);
-        listDb.setArtistInfoLogs(msg.sender,_name,bytes32(0),true);
-        emit artistRegistrated(_msg.sender,block.timestamp);
+        data.setIsArtist(msg.sender,false);
+        data.setArtistList(msg.sender);
+        data.setArtistInfoLogs(msg.sender,_name,bytes32(0),true);
+        emit artistRegistrated(msg.sender,block.timestamp);
     }
 
 
