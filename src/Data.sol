@@ -4,8 +4,7 @@ pragma solidity 0.8.19;
 
 import {AccessControl} from "./AccessControl.sol";
 
-contract Data is AccessControl{
-
+contract Data is AccessControl {
     //User Section
 
     address[] userList;
@@ -74,7 +73,7 @@ contract Data is AccessControl{
         POP
     }
 
-    //Artist Section 
+    //Artist Section
 
     address[] artistList;
 
@@ -88,14 +87,13 @@ contract Data is AccessControl{
 
     mapping(address => bool) isArtist;
 
-    function getIsArtist(address _artist) external view returns(bool) {
+    function getIsArtist(address _artist) external view returns (bool) {
         return isArtist[_artist];
     }
 
-    function setIsArtist(address _artist ,bool toDeactivate) external onlyContracts {
+    function setIsArtist(address _artist, bool toDeactivate) external onlyContracts {
         isArtist[_artist] = !toDeactivate;
     }
-
 
     mapping(address => ArtistInfo) artistInfoLogs;
 
@@ -103,12 +101,13 @@ contract Data is AccessControl{
         return artistInfoLogs[_artist];
     }
 
-    function setArtistInfoLogs(address _artist, string calldata _name, bytes32 codeToSong,bool duringRegistration) external onlyContracts{
-        if(duringRegistration) {
+    function setArtistInfoLogs(address _artist, string calldata _name, bytes32 codeToSong, bool duringRegistration)
+        external
+        onlyContracts
+    {
+        if (duringRegistration) {
             artistInfoLogs[_artist].name = _name;
-        }
-
-        else if(codeToSong != bytes32(0)){
+        } else if (codeToSong != bytes32(0)) {
             artistInfoLogs[_artist].songCreated.push(codeToSong);
         }
     }

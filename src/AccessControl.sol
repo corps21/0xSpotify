@@ -11,7 +11,7 @@ contract AccessControl {
     mapping(address => bool) hasAccess;
 
     modifier onlyOwner() {
-        require(msg.sender == owner,"Access Denied");
+        require(msg.sender == owner, "Access Denied");
         _;
     }
 
@@ -23,5 +23,4 @@ contract AccessControl {
     function setAccess(address _addOfContract) external onlyOwner {
         hasAccess[_addOfContract] = true;
     }
-
 }

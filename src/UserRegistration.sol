@@ -5,7 +5,6 @@ pragma solidity 0.8.19;
 import {Data} from "./Data.sol";
 
 contract UserRegistration {
-
     Data data;
 
     constructor(address _addOfList) {
@@ -17,7 +16,7 @@ contract UserRegistration {
     event userRegistered(address indexed _user, uint256 _whenjoined);
 
     function register(string calldata _name) external {
-        if(data.getIsUser(msg.sender) == true) {
+        if (data.getIsUser(msg.sender) == true) {
             revert alreadyRegistered();
         }
         data.setUserList(msg.sender);
