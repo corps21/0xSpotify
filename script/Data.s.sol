@@ -14,6 +14,8 @@ contract DataDeploy is Script {
         Data data = new Data();
         ArtistRegistration artistRegistration = new ArtistRegistration(address(data));
         UserRegistration userRegistration = new UserRegistration(address(data));
+        data.setAccess(address(artistRegistration));
+        data.setAccess(address(userRegistration));
         vm.stopBroadcast();
     }
 }
