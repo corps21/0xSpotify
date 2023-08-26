@@ -2,7 +2,9 @@
 
 pragma solidity 0.8.19;
 
-contract Data {
+import {AccessControl} from "./AccessControl.sol";
+
+contract Data is AccessControl{
 
     //User Section
 
@@ -12,7 +14,7 @@ contract Data {
         return userList;
     }
 
-    function setUserList(address _user) external {
+    function setUserList(address _user) external onlyContracts {
         userList.push(_user);
     }
 
@@ -22,7 +24,7 @@ contract Data {
         return isUser[_user];
     }
 
-    function setIsUser(address _user, bool _toDeactivate) external {
+    function setIsUser(address _user, bool _toDeactivate) external onlyContracts {
         isUser[_user] = !_toDeactivate;
     }
 
@@ -80,7 +82,7 @@ contract Data {
         return artistList;
     }
 
-    function setArtistList(address _artist) external {
+    function setArtistList(address _artist) external onlyContracts {
         artistList.push(_artist);
     }
 
@@ -90,7 +92,7 @@ contract Data {
         return isArtist[_artist];
     }
 
-    function setIsArtist(address _artist ,bool toDeactivate) external {
+    function setIsArtist(address _artist ,bool toDeactivate) external onlyContracts {
         isArtist[_artist] = !toDeactivate;
     }
 
@@ -101,7 +103,7 @@ contract Data {
         return artistInfoLogs[_artist];
     }
 
-    function setArtistInfoLogs(address _artist, string calldata _name, bytes32 codeToSong,bool duringRegistration) external{
+    function setArtistInfoLogs(address _artist, string calldata _name, bytes32 codeToSong,bool duringRegistration) external onlyContracts{
         if(duringRegistration) {
             artistInfoLogs[_artist].name = _name;
         }
