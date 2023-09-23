@@ -23,4 +23,8 @@ contract AccessControl {
     function setAccess(address _addOfContract) external onlyOwner {
         hasAccess[_addOfContract] = true;
     }
+
+    function getAccess(address _addOfContract) external view returns(bool) {
+        return hasAccess[_addOfContract];
+    }
 }

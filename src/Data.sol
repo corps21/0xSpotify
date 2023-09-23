@@ -5,29 +5,11 @@ pragma solidity 0.8.19;
 import {AccessControl} from "./AccessControl.sol";
 
 contract Data is AccessControl {
-    //User Section
+    address[] private s_userList;
 
-    address[] userList;
+    mapping(address => bool) private s_isUser;
 
-    function getUserList() external view returns (address[] memory) {
-        return userList;
-    }
-
-    function setUserList(address _user) external onlyContracts {
-        userList.push(_user);
-    }
-
-    mapping(address => bool) isUser;
-
-    function getIsUser(address _user) external view returns (bool) {
-        return isUser[_user];
-    }
-
-    function setIsUser(address _user, bool _toDeactivate) external onlyContracts {
-        isUser[_user] = !_toDeactivate;
-    }
-
-    mapping(address => UserInfo) userInfoLogs;
+    mapping(address => UserInfo) private s_userInfoLogs;
 
     struct UserInfo {
         string name;
@@ -35,33 +17,10 @@ contract Data is AccessControl {
         bytes32[] likedSongs;
     }
 
-    //test for gas for other approaches
-    function setUserInfo(
-        string calldata _name,
-        address _artistFollowed,
-        bytes32 idOfSong,
-        bool duringRegistration,
-        address _user,
-        bool isLiked
-    ) external {
-        if (duringRegistration) {
-            userInfoLogs[_user].name = _name;
-        } else if (_artistFollowed != address(0)) {
-            userInfoLogs[_user].artistFollowed.push(_artistFollowed);
-        } else if (isLiked) {
-            userInfoLogs[_user].likedSongs.push(idOfSong);
-        }
-    }
-
-    //Song Section
-
     struct Song {
         string name;
         Genre genreOfSong;
     }
-
-    mapping(bytes32 => Song) idToSong;
-    mapping(bytes32 => address) fromIdToArtist;
 
     enum Genre {
         ROCK,
@@ -73,32 +32,56 @@ contract Data is AccessControl {
         POP
     }
 
-    //Artist Section
+    mapping(bytes32 => Song) private s_idToSong;
 
-    address[] artistList;
+    mapping(bytes32 => address) private s_fromIdToArtist;
 
-    function getArtistList() external view returns (address[] memory) {
-        return artistList;
+    address[] private s_artistList;
+
+    struct ArtistInfo {
+        string name;
+        bytes32[] songCreated;
     }
 
-    function setArtistList(address _artist) external onlyContracts {
-        artistList.push(_artist);
+    mapping(address => ArtistInfo) private s_artistInfoLogs;
+
+    mapping(address => bool) private s_isArtist;
+
+    /**
+     * Setter Functions
+     */
+
+    function setUserList(address _user) external onlyContracts {
+        s_userList.push(_user);
     }
 
-    mapping(address => bool) isArtist;
+    function setIsUser(address _user, bool _toDeactivate) external onlyContracts {
+        s_isUser[_user] = !_toDeactivate;
+    }
 
-    function getIsArtist(address _artist) external view returns (bool) {
-        return isArtist[_artist];
+    function setUserInfo(
+        string calldata _name,
+        address _artistFollowed,
+        bytes32 idOfSong,
+        bool duringRegistration,
+        address _user,
+        bool isLiked
+    ) external {
+        if (duringRegistration) {
+            s_userInfoLogs[_user].name = _name;
+        } else if (_artistFollowed != address(0)) {
+            s_userInfoLogs[_user].artistFollowed.push(_artistFollowed);
+        } else if (isLiked) {
+            s_userInfoLogs[_user].likedSongs.push(idOfSong);
+        }
     }
 
     function setIsArtist(address _artist, bool toDeactivate) external onlyContracts {
-        isArtist[_artist] = !toDeactivate;
+        s_isArtist[_artist] = !toDeactivate;
     }
 
-    mapping(address => ArtistInfo) artistInfoLogs;
-
-    function getArtistInfoLogs(address _artist) external view returns (ArtistInfo memory) {
-        return artistInfoLogs[_artist];
+    function setArtistList(address _artist) external onlyContracts {
+        s_artistList.push(_artist);
     }
 
     function setArtistInfoLogs(address _artist, string calldata _name, bytes32 codeToSong, bool duringRegistration)
@@ -106,14 +89,33 @@ contract Data is AccessControl {
         onlyContracts
     {
         if (duringRegistration) {
-            artistInfoLogs[_artist].name = _name;
+            s_artistInfoLogs[_artist].name = _name;
         } else if (codeToSong != bytes32(0)) {
-            artistInfoLogs[_artist].songCreated.push(codeToSong);
+            s_artistInfoLogs[_artist].songCreated.push(codeToSong);
         }
     }
 
-    struct ArtistInfo {
-        string name;
-        bytes32[] songCreated;
+    /*
+        *Getter Functions
+    */
+
+    function getUserList() external view returns (address[] memory) {
+        return s_userList;
+    }
+
+    function getIsUser(address _user) external view returns (bool) {
+        return s_isUser[_user];
+    }
+
+    function getArtistList() external view returns (address[] memory) {
+        return s_artistList;
+    }
+
+    function getIsArtist(address _artist) external view returns (bool) {
+        return s_isArtist[_artist];
+    }
+
+    function getArtistInfoLogs(address _artist) external view returns (ArtistInfo memory) {
+        return s_artistInfoLogs[_artist];
     }
 }
